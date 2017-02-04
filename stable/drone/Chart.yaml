@@ -1,0 +1,12 @@
+name: drone
+version: 0.1
+description: Drone CI
+keywords:
+- ci
+- build
+sources:
+- https://hub.docker.com/r/drone/drone/
+- https://github.com/drone/drone
+maintainers:
+- name: Greg Taylor
+  email: gtaylor@gc-taylor.com

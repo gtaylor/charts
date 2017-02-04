@@ -1,0 +1,115 @@
+## Drone image
+## ref: https://hub.docker.com/r/drone/drone/tags/
+##
+image: drone/drone:0.5
+
+## Specify a imagePullPolicy
+## 'Always' if imageTag is 'latest', else set to 'IfNotPresent'
+## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+##
+# imagePullPolicy:
+
+## A secret used by the Drone Agents to authenticate to the Drone Server.
+##
+#sharedSecret: Define me!
+
+server:
+  ## For minikube, set this to NodePort, elsewhere use LoadBalancer
+  ## ref: http://kubernetes.io/docs/user-guide/services/#publishing-services---service-types
+  ##
+  serviceType: LoadBalancer
+
+  openRegistration: false
+  orgRestriction: "org1,org2,etc"
+  admins: "user1,user2,user3"
+
+  databaseDriver: sqlite3
+  databaseDatasource: drone.sqlite
+
+  remote:
+    ## ref: http://readme.drone.io/0.5/install/setup/github/
+    github:
+      enabled: false
+      github_url: https://github.com
+      github_private_mode: false
+      oauth2_client_id: xxxxxxxxxx
+      oauth2_secret: xxxxxxxxxxx
+      auth_scopes: repo,repo:status,user:email,read:org
+      #machine_username: drooone
+      #machine_password: drooone
+      use_merge_ref: false
+      status_context: continuous-integration/drone
+      skip_verify_ssl: false
+
+    ## ref: http://readme.drone.io/0.5/install/setup/bitbucket/
+    bitbucketCloud:
+      enabled: false
+      oauth2_client_id: xxxxxxxxxx
+      oauth2_secret: xxxxxxxxxxx
+
+    ## ref: http://readme.drone.io/0.5/install/setup/bitbucket-server/
+    bitbucketServer:
+      enabled: false
+      server_url: xxxx
+      oauth1_consumer_key: xxxx
+      oauth1_private_key_file: xxxx
+      #machine_username: drooone
+      #machine_password: drooone
+
+    ## ref: http://readme.drone.io/0.5/install/setup/gitlab/
+    gitlab:
+      enabled: false
+      gitlab_url: https://gitlab.com
+      gitlab_private_mode: false
+      oauth2_client_id: xxxxxxxxxx
+      oauth2_secret: xxxxxxxxxxx
+      #machine_username: drooone
+      #machine_password: drooone
+      skip_verify_ssl: false
+
+    ## ref: http://readme.drone.io/0.5/install/setup/gogs/
+    gogs:
+      enabled: false
+      gogs_url: xxxx
+      gogs_private_mode: false
+      #machine_username: drooone
+      #machine_password: drooone
+      skip_verify_ssl: false
+
+
+  ## Configure resource requests and limits for Drone Server
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 500m
+    limits:
+      memory: 1Gi
+      cpu: 1
+
+agent:
+  serverPingFreq: "5m0s"
+  serverBackoffInterval: "15s"
+  debugMode: false
+  alwaysPullPlugins: false
+
+  ## Configure resource requests and limits for Drone Agent
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 1Gi
+      cpu: 500m
+    limits:
+      memory: 2Gi
+      cpu: 1
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  size: 5Gi
+  storageClass: generic
+  accessMode: ReadWriteOnce
